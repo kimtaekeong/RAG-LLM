@@ -14,7 +14,7 @@ from langchain_community.vectorstores.faiss import FAISS
 from langserve import RemoteRunnable
 from langchain_openai import ChatOpenAI
 from langchain_core.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-
+from datetime import datetime
 
 # ⭐️ Embedding 설정
 # USE_BGE_EMBEDDING = True 로 설정시 HuggingFace BAAI/bge-m3 임베딩 사용 (2.7GB 다운로드 시간 걸릴 수 있습니다)
@@ -30,7 +30,7 @@ if not USE_BGE_EMBEDDING:
 # 1) REMOTE 접속: 본인의 REMOTE LANGSERVE 주소 입력
 # (예시)
 # LANGSERVE_ENDPOINT = "https://poodle-deep-marmot.ngrok-free.app/llm/"
-LANGSERVE_ENDPOINT = "https://NGROK에서_할당받은_URL/llm/"
+LANGSERVE_ENDPOINT = "http://localhost:5000/chat/"
 
 # 2) LocalHost 접속: 끝에 붙는 N4XyA 는 각자 다르니
 # http://localhost:8000/llm/playground 에서 python SDK 에서 확인!
@@ -100,8 +100,8 @@ def embed_file(file):
         # - Mac M1, M2, M3: "mps"
         # - CPU: "cpu"
         model_kwargs = {
-            # "device": "cuda"
-            "device": "mps"
+            "device": "cuda"
+            #"device": "mps"
             # "device": "cpu"
         }
         encode_kwargs = {"normalize_embeddings": True}
@@ -126,7 +126,7 @@ def format_docs(docs):
 with st.sidebar:
     file = st.file_uploader(
         "파일 업로드",
-        type=["pdf", "txt", "docx"],
+        type=["pdf", "txt"],
     )
 
 if file:
@@ -184,3 +184,12 @@ if user_input := st.chat_input():
                 chunks.append(chunk)
                 chat_container.markdown("".join(chunks))
             add_history("ai", "".join(chunks))
+
+
+        current_time = datetime.now().strftime("%Y:%m:%d:%H:%M")
+
+        log_file_path = "dat_log.log"
+        with open(log_file_path, 'a' if os.path.exists(log_file_path) else 'w') as log_file:
+            log_file.write(f"{current_time} - '{user_input}' \n '{''.join(chunks)}'\n")
+
+
