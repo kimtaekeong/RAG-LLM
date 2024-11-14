@@ -1,4 +1,6 @@
-Teddy Lee님의 코드를 참고하였습니다.
+Teddy Lee님의 코드를 참고하여 기능을 추가하였습니다.
+
+RAG 기록 남기기 & 파일 두개 이상 첨부 가능
 
 [![데모 영상](https://img.youtube.com/vi/VkcaigvTrug/0.jpg)](https://youtu.be/VkcaigvTrug)
 
@@ -43,6 +45,14 @@ ollama run EEVE-Korean-10.8B:latest
 
 ```bash
 python server.py
+```
+## Streamlit 활용하여 RAG 구현
+
+임베딩 모델 - bge-m3
+
+```bash
+streamlit run main.py
+streamlit run main_multi.py
 ```
 
 
